@@ -1,10 +1,15 @@
-# #RecreationThursday 2021-06-03: Hlito
-# Replicate the original with base R only
+# #RecreationThursday: Hlito (recreate)
 # Matt Dray, June 2021
+
+# The challenge hashtag:
+#   https://twitter.com/hashtag/RecreationThursday
+
+# See Hlito's original on the MoMA site:
+#   https://www.moma.org/collection/works/205953?artist_id=50003&page=1&sov_referrer=artist
 
 # Open graphical device
 png(
-  "2021-06-03_rt_hlito/output/hlito.png",
+  "2021-06-03_rt_hlito/output/hlito-recreate.png",
   width  = 10,
   height = 10,
   units  = "cm",

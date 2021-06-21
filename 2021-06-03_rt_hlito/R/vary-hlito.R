@@ -1,12 +1,15 @@
-# #RecreationThursday 2021-06-03: Hlito
-# Function: generate original with element randomness
+# #RecreationThursday: Hlito (remix)
 # Matt Dray, June 2021
 
-vary_hlito <- function(seed = as.numeric(Sys.time())) {
+# Function: generate original with element randomness
+vary_hlito <- function(
+  seed = as.numeric(Sys.time()),
+  sleep = TRUE
+  ) {
   
   # Set seed
   set.seed(seed)  # default is time-based
-  Sys.sleep(1)    # pause for new seed
+  if (sleep) Sys.sleep(1)  # pause for new seed
   
   # Set left-side line segment variables
   l_segs_y <- sample(1:100, 5) / 100  # random
@@ -112,4 +115,3 @@ vary_hlito <- function(seed = as.numeric(Sys.time())) {
   )
   
 }
-

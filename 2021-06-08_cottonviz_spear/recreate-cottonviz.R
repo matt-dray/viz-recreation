@@ -1,9 +1,11 @@
-# Royal Statistical Society's Mary Eleanor Spear #CottonViz challenge
-# https://rss.org.uk/news-publication/news-publications/2021/section-group-reports/mary-eleanor-spear-dataviz-competition-for-childre/
+# RSS #CottonViz challenge (recreate)
 # Matt Dray, June 2021
 
-# Read more about this in the accompanying blog post:
-# https://www.rostrum.blog/2021/06/08/recreate-spear/
+# Read more about the challenge on the RSS website:
+#   https://rss.org.uk/news-publication/news-publications/2021/section-group-reports/mary-eleanor-spear-dataviz-competition-for-childre/
+
+# Read about my recreation in this blog post:
+#   https://www.rostrum.blog/2021/06/08/recreate-spear/
 
 
 # Open graphics device ----------------------------------------------------
@@ -11,7 +13,7 @@
 
 # Open a PNG graphics device
 png(
-  "2021-06-08_cottonviz_spear/output/cottonviz.png",
+  "2021-06-08_cottonviz_spear/output/cottonviz-recreate.png",
   width  = 20,
   height = 12.2,
   units  = "cm",
