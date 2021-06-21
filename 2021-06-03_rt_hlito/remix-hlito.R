@@ -41,8 +41,9 @@ dev.off()
 # Source function
 source("2021-06-03_rt_hlito/R/vary-hlito.R")
 
-# Attach package
+# Attach packages
 library(magick)
+library(magrittr)
 
 # Path to gif subfolder
 gif_path <- file.path("2021-06-03_rt_hlito", "output", "gif")
@@ -89,6 +90,6 @@ png_paths <- list.files(
 # Stitch frames to gif
 hlito_gif <- png_paths %>% 
   image_read() %>% 
-  # image_scale("500x500") %>%  # optional rescale
+  image_scale("500x500") %>%  # optional rescale
   image_animate(fps = 2, dispose = "previous") %>% 
   image_write(file.path(gif_path, "remix-hlito.gif"))
