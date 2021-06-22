@@ -1,6 +1,15 @@
 # #RecreationThursday: Hlito (remix)
 # Matt Dray, June 2021
 
+# The challenge hashtag:
+#   https://twitter.com/hashtag/RecreationThursday
+
+# See Hlito's original on the MoMA site:
+#   https://www.moma.org/collection/works/205953?artist_id=50003&page=1&sov_referrer=artist
+
+# Read about my recreation in this blog post:
+#   https://www.rostrum.blog/2021/06/21/recreate-hlito/
+
 
 # Multi-panel with randomised elements ------------------------------------
 
@@ -46,7 +55,7 @@ library(magick)
 library(magrittr)
 
 # Path to gif subfolder
-gif_path <- file.path("2021-06-03_rt_hlito", "output", "gif")
+hlito_gif_path <- file.path("2021-06-03_rt_hlito", "output", "gif")
 
 # Generate some seed values
 seeds <- sample(as.integer(1:1e+5), 10)
@@ -56,7 +65,7 @@ for (seed in seeds) {
   
   # Set path where image is to be saved
   path_out <- file.path(
-    gif_path,
+    hlito_gif_path,
     paste0("remix-hlito-frame_", seed, ".png")
   )
   
@@ -81,15 +90,15 @@ for (seed in seeds) {
 }
 
 # Fetch paths to PNG frames
-png_paths <- list.files(
-  gif_path,
+hlito_png_paths <- list.files(
+  hlito_gif_path,
   pattern = ".png$",
   full.names = TRUE
 )
 
 # Stitch frames to gif
-hlito_gif <- png_paths %>% 
+hlito_gif <- hlito_png_paths %>% 
   image_read() %>% 
   image_scale("500x500") %>%  # optional rescale
   image_animate(fps = 2, dispose = "previous") %>% 
-  image_write(file.path(gif_path, "remix-hlito.gif"))
+  image_write(file.path(hlito_gif_path, "remix-hlito.gif"))

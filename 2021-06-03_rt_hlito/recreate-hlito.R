@@ -7,6 +7,9 @@
 # See Hlito's original on the MoMA site:
 #   https://www.moma.org/collection/works/205953?artist_id=50003&page=1&sov_referrer=artist
 
+# Read about my recreation in this blog post:
+#   https://www.rostrum.blog/2021/06/21/recreate-hlito/
+
 # Open graphical device
 png(
   "2021-06-03_rt_hlito/output/hlito-recreate.png",
