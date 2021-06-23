@@ -12,8 +12,9 @@
 # Setup -------------------------------------------------------------------
 
 
-# Attach magick (install first from CRAN)
+# Attach packages (install first from CRAN)
 library(magick)
+library(magrittr)
 
 # Functions to make this script more readable
 source("2021-06-08_cottonviz_spear/R/frames.R")
@@ -27,8 +28,11 @@ png_y <- 12.2
 png_u <- "cm"
 png_r <- 600
 
+
 # Create frames -----------------------------------------------------------
 
+
+# TODO: refactor this into a function
 
 # Frame 1: blank
 png(file.path(cotton_gif_path, "cottonviz-frame-1.png"),
@@ -94,9 +98,13 @@ cotton_png_paths <- list.files(
   full.names = TRUE
 )
 
+# Fetch path to copy of original
+cotton_original_path <- 
+  "2021-06-08_cottonviz_spear/reference/spear-cottonviz-original.jpg"
+
 # Stitch frames to gif
-cotton_gif <- cotton_png_paths %>% 
+cotton_gif <- c(cotton_png_paths, cotton_original_path) %>% 
   image_read() %>% 
-  # image_scale("500x500") %>%  # optional rescale
+  image_scale("800x488") %>%
   image_animate(fps = 1, dispose = "previous") %>% 
   image_write(file.path(cotton_gif_path, "recreate-cottonviz.gif"))
