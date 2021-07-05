@@ -46,3 +46,6 @@ po/*~
 
 # macOS
 .DS_Store
+
+# Shiny
+rsconnect/

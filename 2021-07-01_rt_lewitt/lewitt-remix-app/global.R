@@ -1,5 +1,11 @@
 # #RecreationThursday: Lewitt (remix)
-# Matt Dray, July 2021
+# Matt Dray, June 2021
+
+# The challenge hashtag:
+#   https://twitter.com/hashtag/RecreationThursday
+
+# See Sol Lewitt's original 'Color Bands' (2000) on his website:
+#   https://www.sollewittprints.org/artwork/lewitt-raisonne-2000-07/
 
 # Function: place shape of decreasing size and varying colour
 just_lewitt <- function(shape = 21:25,
