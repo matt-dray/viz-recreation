@@ -9,11 +9,6 @@
 
 source("2021-07-01_rt_lewitt/R/just-lewitt.R")
 
-par(mfrow = c(2, 2))
+just_lewitt2()
 
-mapply(
-  just_lewitt,
-  shape = sample(21:25, 4, replace = TRUE),
-  place = sample(c("C", "NE", "NW", "SW", "SE"), 4, replace = TRUE),
-  MoreArgs = list(cols = sample(colours(), 10))
-)
+just_lewitt2(dimn = 2, shp_x = 5, box_w = 3)
