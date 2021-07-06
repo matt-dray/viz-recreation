@@ -41,12 +41,12 @@ server <- function(input, output) {
   # Make output available for download
   output$downloadPlot <- downloadHandler(
     
-    # Set filename in the form YYY-MM-DD_lewit-remix_X-Y-Z, where XYZ are the
-    # grid dimension, point-size mulitplier and box-width inputs
+    # Set filename in the form YYYY-MM-DD-HH-MM-SS_lewit-remix_X-Y-Z, where XYZ
+    # are the grid dimension, point-size mulitplier and box-width inputs
     filename = function() {
       paste0(
-        Sys.Date(), "_lewitt-remix_",
-        input$dimn, "-", input$shp_x, "-", input$box_w, ".png"
+        gsub("[:punct:]|\\s", "-", Sys.time()),
+        "_lewitt-remix_", input$dimn, "-", input$shp_x, "-", input$box_w, ".png"
       )
     },
     

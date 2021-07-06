@@ -83,6 +83,12 @@ ui <- fluidPage(
           "View source on GitHub", 
           href = "https://github.com/matt-dray/viz-recreation/"
         )
+      ),
+      p(
+        a(
+          "Read the blog post", 
+          href = "https://www.rostrum.blog/2021/07/05/recreate-lewitt/"
+        )
       )
     ),
     mainPanel(
