@@ -9,20 +9,19 @@
 
 server <- function(input, output) {
   
+  # Function to generate a random seed
   randomSeed <- eventReactive(input$randseed, {
     sample(1:999999, 1)
   })
   
+  # Function to plot a LeWitt remix (required outside of renderPlot() so that
+  # the user can also access the output using the download button)
   plot_lewitt <- function() {
     
-    if (is.null(randomSeed())) {
-      seed_val <- sample(1:999999, 1)
-    } else {
-      seed_val <- randomSeed()
-    }
+    # Generate new seed on on button click
+    set.seed(randomSeed())
     
-    set.seed(seed_val)
-    
+    # Supply inputs to panel plot function
     just_lewitt2(
       dimn = input$dimn,
       pal = sample(colours(), 7),
@@ -32,14 +31,18 @@ server <- function(input, output) {
     
   }
   
+  # Rendering function for the plot
   output$lewittPlot <- renderPlot({
     
     plot_lewitt()
     
   })
   
+  # Make output available for download
   output$downloadPlot <- downloadHandler(
     
+    # Set filename in the form YYY-MM-DD_lewit-remix_X-Y-Z, where XYZ are the
+    # grid dimension, point-size mulitplier and box-width inputs
     filename = function() {
       paste0(
         Sys.Date(), "_lewitt-remix_",
@@ -47,6 +50,8 @@ server <- function(input, output) {
       )
     },
     
+    # Open png device, call plotting function (not the renderPlot() output),
+    # close device to save to user's machine
     content = function(file) {
       png(file)
       plot_lewitt()

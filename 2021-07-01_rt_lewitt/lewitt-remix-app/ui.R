@@ -1,6 +1,12 @@
 # #RecreationThursday: Lewitt (remix)
 # Matt Dray, June 2021
 
+# Read the blog about this app
+#  https://www.rostrum.blog/2021/07/05/recreate-lewitt/
+
+# Visit the app on shinyapps.io (until I take it down)
+#   https://mattdray.shinyapps.io/lewitt-remix-app/
+
 # The challenge hashtag:
 #   https://twitter.com/hashtag/RecreationThursday
 
@@ -17,7 +23,7 @@ ui <- fluidPage(
         actionButton(
           "randseed",
           "Generate",
-          icon("bullseye")
+          icon("bullseye")  # looks like concentric circles?!
         )
       ),
       hr(),
