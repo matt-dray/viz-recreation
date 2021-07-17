@@ -18,7 +18,7 @@ My gif recreation of Link from The Legend of Zelda (1986) by Nintendo:
 
 <div class="figure">
 
-<img src="output/link-recreate.gif" alt="A two-frame animated recreation of the pixel art of the character Link walking from Nintendo's The Legend of Zelda on the NES." width="50%"/>
+<img src="output/link-recreate.gif" alt="A two-frame animated recreation of the pixel art of the character Link walking from Nintendo's The Legend of Zelda on the NES." width="25%"/>
 
 </div>
 
@@ -26,12 +26,12 @@ Which is composed of two static frames:
 
 <div class="figure">
 
-<img src="output/link_f1.png" alt="A recreation of the first frame of the character Link's walk cycle from Nintendo's The Legend of Zelda on the NES." width="25%"/>
+<img src="output/link_f1.png" alt="A recreation of the first frame of the character Link's walk cycle from Nintendo's The Legend of Zelda on the NES." width="10%"/>
 
 </div>
 
 <div class="figure">
 
-<img src="output/link_f2.png" alt="A recreation of the second frame of the character Link's walk cycle from Nintendo's The Legend of Zelda on the NES." width="25%"/>
+<img src="output/link_f2.png" alt="A recreation of the second frame of the character Link's walk cycle from Nintendo's The Legend of Zelda on the NES." width="10%"/>
 
 </div>
