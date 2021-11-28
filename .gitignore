@@ -39,7 +39,8 @@ vignettes/*.pdf
 .Renviron
 
 # pkgdown site
-docs/
+# (actually using it to serve an HTML page)
+# docs/
 
 # translation temp files
 po/*~
