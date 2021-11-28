@@ -1,30 +1,40 @@
 ---
-title: "Draft: Recreate Spear with {ggplot2}"
+title: "Recreate Spear's cotton visualisation with {ggplot2}"
 author: "Matt Dray"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+  echo = TRUE,
+  fig.width = 5,
+  fig.height = 4.5
+)
 ```
 
-Here's a short code walkthrough to get you started with recreating Spear's cotton plot. It shows an approach to generating the linechart using the {ggplot2} package in R.
+This short code walkthrough will get you started on recreating Spear's cotton plot, as used in [the #CottonViz challenge](https://rss.org.uk/news-publication/news-publications/2021/general-news/cottonviz-data-visualisation-challenge-winners-ann/). 
 
-If you haven't already, install the {tidyverse} package for data manipulation and plotting, and the {extrafont} package for font handling.
+[The {ggplot2} package in R](https://ggplot2.tidyverse.org/) is a good choice, since we can build up the chart in steps: first, we'll build a basic line chart, remove unneeded elements, fix the axes and finally add the labels. It won't look perfectly like Spear's original, but we'll get close.
 
-```{r eval=FALSE}
+This isn't a guide to learn {ggplot2}, so you may want to learn the basics first. Alternatively, [I wrote a blog post](https://www.rostrum.blog/2021/06/08/recreate-spear/) about building Spear's entire visualisation using base R.
+
+# Requirements
+
+First, some preparation. If you haven't already, install the [{ggplot2}](https://ggplot2.tidyverse.org/) package for plotting, [{tidyr}](https://tidyr.tidyverse.org/) for data reshaping and [{extrafont}](https://github.com/wch/extrafont) for font handling.
+
+```{r install, eval=FALSE}
 install.packages("ggplot2", "tidyr", "extrafont")
 ```
 
-You can download for free [the Routed Gothic font by Darren Embry](https://webonastick.com/fonts/routed-gothic/), which is a good approximation of the lettering used by Spear. Installation will depend on your operating system. Attach {extrafont} and it will fetch your installed fonts to use in R.
+You can download for free [the Routed Gothic font by Darren Embry](https://webonastick.com/fonts/routed-gothic/), which is a good approximation of the stencil lettering used by Spear. Installation will depend on your system, but in macOS you can simply drag the font files to the Font Book app. When you attach {extrafont} it'll fetch automatically your installed fonts to use in R.
 
-```{r}
+```{r extrafont}
 library(extrafont)
 ```
 
-The dataset is quite small, so we can create the dataframe ourselves.
+The cotton dataset is quite small, so we can create the dataframe ourselves. It provides information on the supply of cotton in the USA in the 1940s.
 
-```{r cars}
+```{r data}
 cotton_raw <- data.frame(
   year           = 1942:1948,
   us_consumption = c(11160, 9993,  9693,  9423,  10072, 9374,  7833),
@@ -36,7 +46,7 @@ cotton_raw <- data.frame(
 
 It's preferable to make the data 'tidy' so that there's one row per year and consumption type, and one column for each variable. The {tidyr} package can help us pivot the data from 'long' format to this 'wide' format.
 
-```{r}
+```{r reshape}
 library(tidyr)
 
 cotton <- cotton_raw %>% 
@@ -45,95 +55,87 @@ cotton <- cotton_raw %>%
     names_to = "consumption_type", values_to = "boles"
   )
 
-cotton
+head(cotton, 4)  # preview first few rows
 ```
 
-Let's build the plot step by step so you can see its development. It won't look like Spear's original work to start with, but we'll get there.
+# Step 1: line chart
 
-First, we can create a basic line chart of the data. Each consumption type gets a different dashed line.
+Now we can create a basic line chart of the data with `geom_line()` and set with `scale_linetype_manual()` a unique dashed line per group. Further arguments set the title and the typeface to be used throughout the plot, while a small tweak to `theme()` adjusts the title's position.
 
-```{r}
+```{r p1-plot}
 library(ggplot2)
 
 p1 <- ggplot() +
   geom_line(
     data = cotton,
-    aes(
-      x = year, 
-      y = boles / 1000,
-      linetype = consumption_type
-    ),
+    aes(x = year, y = boles / 1000, linetype = consumption_type),
     size = 1.5
   ) +
-  scale_linetype_manual(
-    values = c("longdash", "dashed", "solid")
+  scale_linetype_manual(values = c("longdash", "dashed", "solid")) +
+  labs(title = "Millions of Boles") +
+  theme(
+    plot.title = element_text(hjust = -0.05),
+    text = element_text(family = "Routed Gothic")
   )
 
 p1
 ```
 
-With {ggplot2} it's tricky to put tick marks inside the plotting space and to add a secondary x-axis. A simple hack is to add points at the plot margins. Hyphens and pipes make good horizontal and vertical marks.
+# Step 2: remove features
 
-```{r}
-p2 <- p1 +
-  geom_point(
-    aes(
-      x = c(rep(1942, 5), rep(1948, 5)), 
-      y = c(rep(seq(2, 10, 2), 2)),
-    ),
-    shape = "—",
-    size = 4
-  ) +
-  geom_point(
-    aes(
-      x = 1943:1947,
-      y = rep(0, 5)
-    ),
-    shape = "|",
-    size = 4
-  ) 
+Let's clear away the unneeded features: the background panel, the axes titles and the legend. You can empty these with `element_blank()` in the `theme()` function. 
+
+```{r p2-remove}
+p2 <- p1 + 
+  theme(
+    panel.background = element_blank(),
+    axis.title = element_blank(),
+    legend.position = "none"
+  )
 
 p2
 ```
 
-Now we must clip the axes: years on the x-axis from 1942 to 1948 and the amount of cotton on the y-axis from 0 to 12. We can also use the `labels` argument to limit the x-axis labels to two digits, like setting 1944 to '44.
+# Step 3: correct the axes
 
-```{r}
+Now we can address the axes. Use the `scale_*_continuous()` functions to set the axes values, limits, origin and labels. With `sec.axis` you can create a secondary y-axis that mirrors the first, then remove the tick labels in the `theme()` function. You can also put a box around the chart area with the `panel.border` argument.
+
+```{r p3-axes}
 p3 <- p2 +
   scale_x_continuous(
     breaks = seq(1942, 1948, 1),
-    expand = c(0, 0),
-    labels = c("1942", paste0("'", 43:48))
+    labels = c("1942", paste0("'", 43:48)),
+    expand = c(0, 0)
   ) +
   scale_y_continuous(
     breaks = seq(0, 12, 2),
     limits = c(0, 12),
-    expand = c(0, 0)
+    expand = c(0, 0),
+    sec.axis = dup_axis()
+  ) +
+  theme(
+    axis.ticks = element_line(size = c(0, rep(0.5, 5), 0)),
+    axis.ticks.length = unit(-0.5, "lines"),
+    axis.text.y.right = element_blank(),
+    panel.border = element_rect(fill = NA, size = 1)
   )
 
 p3
 ```
 
-The line labels can be added with the `annotate()` function. A bit of trial-and-error will help you find where they should be placed. Now is a good time to add the title of the plot as well.
+# Step 4: labels
 
-```{r}
+The only missing features are the labels and arrows, which can be added with the `annotate()` and `geom_segment()`, respectively. A bit of trial-and-error will help you find the correct coordinates to place these elements.
+
+```{r p4-labels}
 p4 <- p3 +
   annotate(
     geom = "text",
-    x = c(1946.3, 1945.9, 1943.75),
-    y = c(11, 7, 3.2),
-    label = c("U. S. Consumption", "Carry–over\nStocks", "Exports"),
+    x = c(1946.1, 1945.9, 1943.75),
+    y = c(10.8, 7.1, 3.2),
+    label = c("U. S. Consumption", "Carry – over\nStocks", "Exports"),
     family = "Routed Gothic"
   ) +
-  labs(title = "Millions of Boles")
-
-p4
-```
-
-The label arrows can be added with `geom_segment()`, with `x` and `y` arguments for the start point and `xend` and `yend` for the end. Again, some manual tinkering of these values will be needed.
-
-```{r}
-p5 <- p4 +
   geom_segment(
     aes(
       x = c(1945.2, 1945.3, 1944.2),
@@ -147,30 +149,20 @@ p5 <- p4 +
     )
   )
 
-p5
+p4
 ```
 
-We're almost done. The last step is to make a number of minor adjustments to the appearance of the plot using the `theme()` function. We'll set a number of options to remove unneeded features, like the panel background and legend. Then we can add a box around the panel and declare the general font family.
+# Next steps
 
-```{r}
-p5 + theme(
-  panel.background = element_blank(),  # remove background panel
-  panel.grid.major = element_blank(),  # remove gridlines
-  panel.grid.minor = element_blank(),  # remove gridlines
-  axis.ticks = element_blank(),    # remove ticks from both axes
-  axis.title.x = element_blank(),  # remove x axis title
-  axis.title.y = element_blank(),  # remove y axis title
-  axis.line = element_blank(),     # remove all axis lines
-  panel.border = element_rect(fill = NA, size = 1),  # 'box' around main panel
-  legend.position = "none",        # remove legend
-  text = element_text(family = "Routed Gothic")  # set plot font
+Finally we've got a lineplot that looks pretty close to Spear's visualisation. What subtle differences do you notice, though? Try to find ways to improve them.
+
+Next, try to recreate the stacked-barchart from Spear's original and then arrange the plots with a main title and surrounding text labels. [The {ggpattern} package](https://coolbutuseless.github.io/package/ggpattern/index.html) may help you recreate the hatchlines on the bars and [{patchwork}](https://patchwork.data-imaginist.com/) could help with the arrangement of the plot and text elements.
+
+```{r eval=FALSE, echo=FALSE}
+file.copy(
+  here::here("2021-06-08_cottonviz_spear/walkthrough/recreate-cottonviz-ggplot2-walkthrough.html"),
+  here::here("docs/cottonviz-ggplot2-walkthrough.html"),
+  overwrite = TRUE
 )
 ```
 
-Finally we've got a lineplot that looks pretty close to Spear's original. 
-
-Hopefully you've seen that it's easy to create the basic chart, but trickier to make the small adjustments needed to mimic the original author's style.
-
-The next steps are for you to try and create the stacked-barchart panel and then arrange the plots with a main title and surrounding text labels. [The {ggpattern} package](https://coolbutuseless.github.io/package/ggpattern/index.html) may help you recreate the hatchlines on the bars and [{patchwork}](https://patchwork.data-imaginist.com/) could help with the arrangement of the plot and text elements.
-
-[I wrote a blog post](https://www.rostrum.blog/2021/06/08/recreate-spear/) about recreating the whole visualisation using base R functions that may help you.
